@@ -1,0 +1,132 @@
+---
+import FormattedDate from '../components/FormattedDate.astro';
+import { POLICY_UPDATED, PRIVACY_EMAIL, SITE_AUTHOR } from '../consts';
+import Base from '../layouts/Base.astro';
+
+const host = new URL(Astro.site!).host;
+---
+
+<Base title="Privacy policy" description={`Come ${host} tratta i dati personali di chi lo visita.`}>
+	<p class="eyebrow">Aggiornata il <FormattedDate date={POLICY_UPDATED} /></p>
+	<h1>Privacy policy</h1>
+	<div class="prose">
+		<p>
+			Questa pagina spiega quali dati personali vengono trattati quando visiti <strong>{host}</strong>, ai sensi
+			del Regolamento (UE) 2016/679 («GDPR») e del D.lgs. 196/2003 («Codice privacy»).
+		</p>
+
+		<h2>Che sito è</h2>
+		<p>
+			È un <strong>blog personale e privato</strong>, scritto a titolo individuale e
+			<strong>senza alcuna finalità commerciale</strong>. Non vende nulla, non ospita pubblicità né contenuti
+			sponsorizzati, non ha affiliazioni, non chiede registrazioni o account, non ha commenti, moduli di
+			contatto o newsletter. Gli articoli esprimono opinioni personali dell'autore.
+		</p>
+
+		<h2>Titolare del trattamento</h2>
+		<p>
+			{SITE_AUTHOR}, persona fisica, autore del blog.
+			{
+				PRIVACY_EMAIL ? (
+					<>
+						Per qualsiasi richiesta sui tuoi dati puoi scrivere a <a href={`mailto:${PRIVACY_EMAIL}`}>{PRIVACY_EMAIL}</a>.
+					</>
+				) : (
+					<>
+						Per qualsiasi richiesta sui tuoi dati puoi contattarmi tramite i recapiti nella pagina{' '}
+						<a href="/about/">Chi sono</a>.
+					</>
+				)
+			}
+		</p>
+
+		<h2>Quali dati vengono trattati</h2>
+
+		<h3>Dati tecnici di navigazione</h3>
+		<p>
+			Come qualsiasi sito web, il server che ospita il blog riceve, per il solo fatto che il browser richiede le
+			pagine, alcune informazioni tecniche: indirizzo IP, data e ora della richiesta, pagina richiesta, tipo di
+			browser e sistema operativo. Servono esclusivamente a far funzionare il sito e a garantirne la sicurezza
+			(per esempio per individuare abusi o malfunzionamenti), non vengono usate per identificare i visitatori e
+			sono conservate per il tempo strettamente necessario a questi scopi. La base giuridica è il legittimo
+			interesse del titolare al funzionamento e alla sicurezza del sito (art. 6.1.f GDPR).
+		</p>
+
+		<h3>Statistiche di visita (Google Analytics), solo con il tuo consenso</h3>
+		<p>
+			<strong>Solo se lo accetti dal banner</strong>, il sito carica Google Tag Manager e Google Analytics 4,
+			servizi di Google Ireland Limited (Gordon House, Barrow Street, Dublino 4, Irlanda). Li uso unicamente per
+			sapere, in forma aggregata, quante persone leggono il blog, quali articoli e da quale tipo di dispositivo.
+			Non li uso per pubblicità, remarketing o profilazione: le funzioni pubblicitarie sono disattivate
+			(<em>Consent Mode</em> con <code>ad_storage</code>, <code>ad_user_data</code> e
+			<code>ad_personalization</code> sempre negati) e i dati non vengono incrociati con altre fonti.
+		</p>
+		<p>
+			Google Analytics raccoglie identificativi online (cookie), pagine visitate, durata della visita, tipo di
+			dispositivo e browser e una posizione geografica approssimativa (paese, regione, città) ricavata
+			dall'indirizzo IP; Google Analytics 4 non registra né conserva l'indirizzo IP completo. I dati restano
+			in Google Analytics per un massimo di 14 mesi.
+		</p>
+		<p>
+			La base giuridica è il tuo consenso (art. 6.1.a GDPR), che puoi negare o revocare in ogni momento, con lo
+			stesso effetto, dal link <button type="button" class="link-button" data-cookie-prefs>Preferenze cookie</button> in
+			fondo a ogni pagina. Rifiutare non cambia nulla nell'uso del sito.
+		</p>
+		<p>
+			Google può trattare i dati anche negli Stati Uniti; il trasferimento avviene sulla base della decisione di
+			adeguatezza della Commissione europea sull'<em>EU-U.S. Data Privacy Framework</em>, cui Google LLC
+			aderisce, e delle clausole contrattuali standard. Per sapere come Google tratta i dati:
+			<a href="https://policies.google.com/privacy?hl=it" rel="noopener">privacy policy di Google</a> e
+			<a href="https://policies.google.com/technologies/partner-sites?hl=it" rel="noopener"
+				>come Google utilizza i dati dei siti che usano i suoi servizi</a
+			>.
+		</p>
+
+		<h3>Se mi scrivi</h3>
+		<p>
+			Se mi contatti di tua iniziativa (per email o tramite i social), userò i dati che mi invii solo per
+			risponderti, e non li conserverò più del necessario.
+		</p>
+
+		<h3>Cosa non viene usato</h3>
+		<p>
+			Caratteri tipografici, script e fogli di stile sono serviti direttamente dal sito: niente Google Fonts,
+			niente CDN di terze parti, niente pulsanti social o contenuti incorporati da altri siti. I link verso
+			Mastodon, GitHub, X e altri siti sono semplici collegamenti: una volta lì valgono le loro privacy policy.
+		</p>
+
+		<h2>A chi vanno i dati</h2>
+		<p>
+			I dati non vengono venduti, ceduti o diffusi. Possono accedervi solo il titolare e, per i servizi
+			descritti sopra, il fornitore dell'infrastruttura su cui gira il sito e Google, ciascuno nei limiti del
+			proprio ruolo.
+		</p>
+
+		<h2>I tuoi diritti</h2>
+		<p>
+			In qualsiasi momento puoi chiedere l'accesso ai tuoi dati, la rettifica, la cancellazione, la limitazione
+			del trattamento, la portabilità, o opporti al trattamento (artt. 15–22 GDPR), e revocare il consenso
+			senza che questo tocchi la liceità di quanto fatto prima. Considera che, salvo i casi in cui mi scrivi,
+			non ho modo di risalire alla tua identità dai dati statistici o tecnici.
+		</p>
+		<p>
+			Hai anche diritto di proporre reclamo al
+			<a href="https://www.garanteprivacy.it/" rel="noopener">Garante per la protezione dei dati personali</a>.
+		</p>
+
+		<h2>Cookie</h2>
+		<p>Tutti i dettagli sui cookie sono nella <a href="/cookie/">cookie policy</a>.</p>
+
+		<h2>Modifiche</h2>
+		<p>
+			Se cambierà qualcosa nel modo in cui il sito tratta i dati, aggiornerò questa pagina e la data in cima.
+		</p>
+	</div>
+</Base>
+
+<style>
+	h1 {
+		font-size: clamp(2rem, 1.5rem + 2.2vw, 2.75rem);
+		margin-bottom: 2rem;
+	}
+</style>

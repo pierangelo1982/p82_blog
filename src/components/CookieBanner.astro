@@ -1,0 +1,223 @@
+---
+// Banner cookie: Google Tag Manager / Analytics parte solo dopo "Accetta".
+// Senza JavaScript il banner non compare e nessun tracciamento viene caricato.
+// Qualsiasi elemento con [data-cookie-prefs] riapre il banner; [data-consent-status] mostra la scelta attuale.
+---
+
+<div
+	id="cookie-banner"
+	class="cookie-banner"
+	role="dialog"
+	aria-modal="false"
+	aria-labelledby="cookie-banner-title"
+	aria-describedby="cookie-banner-text"
+	hidden
+>
+	<div class="inner">
+		<button type="button" class="close" data-consent="reject" aria-label="Chiudi e rifiuta">×</button>
+		<p id="cookie-banner-title" class="title">Cookie e statistiche</p>
+		<p id="cookie-banner-text" class="text">
+			Questo è un blog personale e non commerciale: niente pubblicità, niente profilazione. Se accetti, uso
+			Google Analytics solo per sapere, in forma aggregata, quante persone leggono il sito. Se rifiuti, il sito
+			funziona esattamente allo stesso modo. Dettagli nella <a href="/cookie/">cookie policy</a> e nella
+			<a href="/privacy/">privacy policy</a>.
+		</p>
+		<div class="actions">
+			<button type="button" data-consent="reject">Rifiuta</button>
+			<button type="button" data-consent="accept">Accetta</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { GTM_ID } from '../consts';
+
+	const KEY = 'p82-consent';
+	const MAX_AGE = 180 * 24 * 60 * 60 * 1000; // il consenso viene richiesto di nuovo dopo 6 mesi
+
+	type Consent = { v: 1; analytics: boolean; ts: number };
+	type W = Window & { dataLayer?: unknown[] };
+
+	const banner = document.getElementById('cookie-banner') as HTMLElement;
+
+	function readConsent(): Consent | null {
+		try {
+			const c = JSON.parse(localStorage.getItem(KEY) ?? 'null');
+			if (c && c.v === 1 && typeof c.analytics === 'boolean' && Date.now() - c.ts < MAX_AGE) return c;
+		} catch {}
+		return null;
+	}
+
+	function saveConsent(analytics: boolean) {
+		try {
+			localStorage.setItem(KEY, JSON.stringify({ v: 1, analytics, ts: Date.now() }));
+		} catch {}
+	}
+
+	let gtmLoaded = false;
+	function loadGtm() {
+		if (gtmLoaded) return;
+		gtmLoaded = true;
+		const w = window as W;
+		w.dataLayer = w.dataLayer || [];
+		function gtag(..._args: unknown[]) {
+			// eslint-disable-next-line prefer-rest-params
+			w.dataLayer!.push(arguments);
+		}
+		// Consent Mode v2: solo statistiche, mai pubblicità o personalizzazione
+		gtag('consent', 'default', {
+			analytics_storage: 'granted',
+			ad_storage: 'denied',
+			ad_user_data: 'denied',
+			ad_personalization: 'denied',
+		});
+		w.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+		const s = document.createElement('script');
+		s.async = true;
+		s.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
+		document.head.append(s);
+	}
+
+	// Cancella i cookie di Google Analytics (_ga, _ga_*, _gid, _gat) su questo host e sui domini padre.
+	function clearAnalyticsCookies() {
+		const parts = location.hostname.split('.');
+		const domains = ['', location.hostname, `.${location.hostname}`];
+		for (let i = 1; i < parts.length - 1; i++) domains.push(`.${parts.slice(i).join('.')}`);
+		const names = document.cookie
+			.split(';')
+			.map((c) => c.split('=')[0].trim())
+			.filter((n) => /^_(ga|gid|gat)/.test(n));
+		for (const name of names) {
+			for (const d of domains) {
+				document.cookie = `${name}=; Max-Age=0; path=/${d ? `; domain=${d}` : ''}`;
+			}
+		}
+	}
+
+	function updateStatus() {
+		const c = readConsent();
+		const label = !c ? 'nessuna scelta' : c.analytics ? 'statistiche accettate' : 'statistiche rifiutate';
+		document.querySelectorAll('[data-consent-status]').forEach((el) => (el.textContent = label));
+	}
+
+	function show(focus: boolean) {
+		banner.hidden = false;
+		if (focus) banner.querySelector<HTMLButtonElement>('.actions button')?.focus();
+	}
+
+	function hide() {
+		banner.hidden = true;
+	}
+
+	function choose(analytics: boolean) {
+		const wasActive = gtmLoaded || document.cookie.includes('_ga');
+		saveConsent(analytics);
+		hide();
+		updateStatus();
+		if (analytics) {
+			loadGtm();
+		} else if (wasActive) {
+			// Revoca: via i cookie già scritti, e ricarica per scaricare GTM dalla pagina
+			clearAnalyticsCookies();
+			location.reload();
+		}
+	}
+
+	banner.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((btn) =>
+		btn.addEventListener('click', () => choose(btn.dataset.consent === 'accept')),
+	);
+	banner.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') hide();
+	});
+	document.querySelectorAll('[data-cookie-prefs]').forEach((el) =>
+		el.addEventListener('click', (e) => {
+			e.preventDefault();
+			show(true);
+		}),
+	);
+
+	const consent = readConsent();
+	if (consent?.analytics) loadGtm();
+	else if (!consent) {
+		clearAnalyticsCookies(); // consenso scaduto o assente: nessun cookie residuo
+		show(false);
+	}
+	updateStatus();
+</script>
+
+<style>
+	.cookie-banner {
+		position: fixed;
+		inset: auto 0 0 0;
+		z-index: 50;
+		background: var(--surface);
+		border-top: 1px solid var(--faint);
+		box-shadow: 0 -0.5rem 1.5rem rgba(0, 0, 0, 0.06);
+		font-family: var(--sans);
+		font-size: 0.875rem;
+		line-height: 1.55;
+	}
+	.cookie-banner[hidden] {
+		display: none;
+	}
+	.inner {
+		position: relative;
+		max-width: calc(var(--measure) + 2 * var(--gutter));
+		margin: 0 auto;
+		padding: 1.1rem var(--gutter) 1.25rem;
+	}
+	.title {
+		margin: 0 2rem 0.35rem 0;
+		font-weight: 600;
+	}
+	.text {
+		margin: 0;
+		color: var(--muted);
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.6rem;
+		margin-top: 0.9rem;
+	}
+	/* I due pulsanti hanno lo stesso peso visivo: rifiutare è facile quanto accettare */
+	.actions button {
+		min-width: 7.5rem;
+		padding: 0.5rem 1rem;
+		font: inherit;
+		font-weight: 600;
+		color: var(--text);
+		background: transparent;
+		border: 1px solid var(--text);
+		border-radius: 0.25rem;
+		cursor: pointer;
+	}
+	.actions button:hover {
+		background: var(--text);
+		color: var(--bg);
+	}
+	.close {
+		position: absolute;
+		top: 0.6rem;
+		right: calc(var(--gutter) - 0.5rem);
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		font: inherit;
+		font-size: 1.35rem;
+		line-height: 1;
+		color: var(--muted);
+		background: none;
+		border: 0;
+		cursor: pointer;
+	}
+	.close:hover {
+		color: var(--text);
+	}
+	@media (max-width: 30rem) {
+		.actions button {
+			flex: 1;
+		}
+	}
+</style>

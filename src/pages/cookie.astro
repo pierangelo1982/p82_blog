@@ -1,0 +1,116 @@
+---
+import FormattedDate from '../components/FormattedDate.astro';
+import { POLICY_UPDATED } from '../consts';
+import Base from '../layouts/Base.astro';
+
+const host = new URL(Astro.site!).host;
+---
+
+<Base title="Cookie policy" description={`Quali cookie usa ${host} e come gestirli.`}>
+	<p class="eyebrow">Aggiornata il <FormattedDate date={POLICY_UPDATED} /></p>
+	<h1>Cookie policy</h1>
+	<div class="prose">
+		<p>
+			<strong>{host}</strong> è un blog personale e privato, senza finalità commerciali: non mostra pubblicità e
+			non usa cookie di profilazione. L'unico strumento di terze parti è Google Analytics, che viene attivato
+			<strong>solo se lo accetti</strong>.
+		</p>
+		<p>
+			La tua scelta attuale: <strong data-consent-status>nessuna scelta</strong>.
+			<button type="button" class="link-button" data-cookie-prefs>Modifica le preferenze</button>
+		</p>
+
+		<h2>Cosa sono i cookie</h2>
+		<p>
+			Sono piccoli file di testo che un sito salva nel browser per ricordare informazioni tra una pagina e
+			l'altra o tra una visita e l'altra. Tecnologie simili, come il <em>localStorage</em> del browser, sono
+			trattate allo stesso modo.
+		</p>
+
+		<h2>Strumenti tecnici (sempre attivi, senza consenso)</h2>
+		<p>
+			Il sito non imposta cookie tecnici propri. Salva soltanto, nel <em>localStorage</em> del tuo browser, la
+			scelta fatta nel banner, per non riproportelo a ogni pagina. Questo dato resta sul tuo dispositivo, non
+			viene inviato a nessuno ed è strettamente necessario: per questo non richiede consenso.
+		</p>
+		<div class="table">
+			<table>
+				<thead>
+					<tr><th>Nome</th><th>Tipo</th><th>Scopo</th><th>Durata</th></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><code>p82-consent</code></td>
+						<td>localStorage</td>
+						<td>Ricorda se hai accettato o rifiutato le statistiche</td>
+						<td>6 mesi, poi la scelta viene chiesta di nuovo</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2>Cookie statistici di terze parti (solo con consenso)</h2>
+		<p>
+			Se accetti, il sito carica Google Tag Manager e Google Analytics 4 (Google Ireland Limited), che
+			impostano i cookie qui sotto per contare le visite in forma aggregata. Le funzioni pubblicitarie e di
+			personalizzazione restano sempre disattivate. Se rifiuti o chiudi il banner, questi script non vengono
+			nemmeno scaricati e nessun cookie viene scritto.
+		</p>
+		<div class="table">
+			<table>
+				<thead>
+					<tr><th>Nome</th><th>Fornitore</th><th>Scopo</th><th>Durata</th></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><code>_ga</code></td>
+						<td>Google</td>
+						<td>Distingue i visitatori in modo anonimo per contare le visite</td>
+						<td>2 anni</td>
+					</tr>
+					<tr>
+						<td><code>_ga_&lt;ID&gt;</code></td>
+						<td>Google</td>
+						<td>Mantiene lo stato della sessione di navigazione</td>
+						<td>2 anni</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<p>
+			Come Google tratta questi dati è descritto nella <a href="/privacy/">privacy policy</a> del sito e nella
+			<a href="https://policies.google.com/privacy?hl=it" rel="noopener">privacy policy di Google</a>.
+		</p>
+
+		<h2>Come cambiare idea</h2>
+		<ul>
+			<li>
+				Dal link <strong>Preferenze cookie</strong> in fondo a ogni pagina puoi riaprire il banner e cambiare
+				scelta quando vuoi. Se revochi il consenso, i cookie di Google Analytics vengono cancellati e la pagina
+				ricaricata senza statistiche.
+			</li>
+			<li>
+				Puoi bloccare o cancellare i cookie dalle impostazioni del browser:
+				<a href="https://support.google.com/chrome/answer/95647?hl=it" rel="noopener">Chrome</a>,
+				<a href="https://support.mozilla.org/it/kb/protezione-antitracciamento-avanzata-firefox-desktop" rel="noopener"
+					>Firefox</a
+				>,
+				<a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" rel="noopener">Safari</a>,
+				<a href="https://support.microsoft.com/it-it/microsoft-edge" rel="noopener">Edge</a>.
+			</li>
+			<li>
+				Google offre un
+				<a href="https://tools.google.com/dlpage/gaoptout?hl=it" rel="noopener"
+					>componente aggiuntivo per disattivare Google Analytics</a
+				> su tutti i siti.
+			</li>
+		</ul>
+	</div>
+</Base>
+
+<style>
+	h1 {
+		font-size: clamp(2rem, 1.5rem + 2.2vw, 2.75rem);
+		margin-bottom: 2rem;
+	}
+</style>
