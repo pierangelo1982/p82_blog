@@ -15,9 +15,8 @@ export const SOCIAL_LINKS = [
 // Viene caricato solo dopo il consenso dato nel banner cookie (vedi CookieBanner.astro).
 export const GTM_ID = 'GTM-WPJT7C6B';
 
-// Indirizzo per le richieste privacy (GDPR), mostrato in privacy e cookie policy.
-// TODO: inserire un indirizzo email di contatto.
-export const PRIVACY_EMAIL = '';
+// Indirizzo per le richieste privacy (GDPR), mostrato nella privacy policy.
+export const PRIVACY_EMAIL = 'pierangelo1982@gmail.com';
 
 // Data dell'ultima modifica di privacy e cookie policy.
 export const POLICY_UPDATED = new Date('2026-11-26');

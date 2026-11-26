@@ -3,9 +3,6 @@
  * Colori come variabili, con variante scura automatica (prefers-color-scheme).
  */
 
-@import '@fontsource-variable/source-serif-4/opsz.css';
-@import '@fontsource-variable/source-serif-4/opsz-italic.css';
-@import '@fontsource-variable/inter/index.css';
 
 :root {
 	--bg: #fbfaf7;
@@ -26,8 +23,8 @@
 	--chart-grid: #ebe7de;
 	--chart-axis: #c9c3b7;
 
-	--serif: 'Source Serif 4 Variable', 'Iowan Old Style', Georgia, serif;
-	--sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--serif: var(--font-serif); /* Source Serif 4, vedi fonts in astro.config.mjs */
+	--sans: var(--font-sans); /* Inter */
 	--mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
 
 	--measure: 40rem; /* ~68 caratteri per riga */
