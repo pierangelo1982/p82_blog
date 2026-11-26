@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Pagina non trovata" description="Pagina non trovata">
+	<p class="eyebrow">Errore 404</p>
+	<h1>Questa pagina non esiste.</h1>
+	<p class="lead">
+		Forse è stata spostata, o il link era sbagliato. Prova dalla <a href="/">home</a> o dall'<a
+			href="/blog/">elenco degli articoli</a>.
+	</p>
+</Base>
+
+<style>
+	h1 {
+		font-size: clamp(2rem, 1.5rem + 2.2vw, 2.75rem);
+	}
+	.lead {
+		margin-top: 1.25rem;
+		color: var(--muted);
+	}
+</style>

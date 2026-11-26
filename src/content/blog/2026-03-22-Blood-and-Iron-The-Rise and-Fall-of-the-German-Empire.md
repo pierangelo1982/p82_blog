@@ -1,6 +1,5 @@
 ---
 title: 'Blood and Iron: The Rise and Fall of the German Empire 1871–1918'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 22 2026'
 heroImage: '../../assets/2026/03/blood-and-iron-the-rise-and-fall-of-the-german-empire-1871-1918.webp'
 ---

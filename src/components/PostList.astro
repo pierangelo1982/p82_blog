@@ -1,0 +1,77 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import { type Post, summary } from '../lib/posts';
+
+interface Props {
+	posts: Post[];
+	/** Mostra l'estratto sotto il titolo. */
+	excerpt?: boolean;
+	/** Data breve (senza anno), utile quando la lista è già raggruppata per anno. */
+	shortDate?: boolean;
+}
+
+const { posts, excerpt = true, shortDate = false } = Astro.props;
+---
+
+<ol class:list={['post-list', { compact: !excerpt }]}>
+	{
+		posts.map((post) => (
+			<li>
+				<a href={`/blog/${post.id}/`}>
+					<span class="meta">
+						<FormattedDate date={post.data.pubDate} format={shortDate ? 'short' : 'long'} />
+					</span>
+					<h3>{post.data.title}</h3>
+					{excerpt && <p>{summary(post)}</p>}
+				</a>
+			</li>
+		))
+	}
+</ol>
+
+<style>
+	.post-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	li + li {
+		margin-top: 2.1rem;
+	}
+	a {
+		display: block;
+		text-decoration: none;
+	}
+	a:hover {
+		color: inherit;
+	}
+	h3 {
+		font-size: 1.25rem;
+		margin-top: 0.2rem;
+		transition: color 0.15s ease;
+	}
+	a:hover h3 {
+		color: var(--accent);
+	}
+	/* Variante compatta (archivio): data a sinistra, titolo a destra */
+	.compact li + li {
+		margin-top: 0.9rem;
+	}
+	.compact a {
+		display: grid;
+		grid-template-columns: 4.5rem 1fr;
+		align-items: baseline;
+		gap: 1rem;
+	}
+	.compact h3 {
+		font-size: 1.1rem;
+		font-weight: 500;
+		margin: 0;
+	}
+	p {
+		margin: 0.4rem 0 0;
+		color: var(--muted);
+		font-size: 0.95em;
+		line-height: 1.6;
+	}
+</style>

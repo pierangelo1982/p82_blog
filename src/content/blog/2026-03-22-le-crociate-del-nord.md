@@ -1,6 +1,5 @@
 ---
 title: 'Le crociate del Nord. Il Baltico e la frontiera cattolica 1100-1525'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 21 2026'
 heroImage: '../../assets/2026/03/le-crociate-del-nord.webp'
 ---

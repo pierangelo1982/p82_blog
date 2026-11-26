@@ -1,6 +1,5 @@
 ---
 title: '21 banalità per il XXI secolo'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 19 2026'
 heroImage: '../../assets/2026/03/21-banalita-per-il-21enisomo-secolo.webp'
 ---

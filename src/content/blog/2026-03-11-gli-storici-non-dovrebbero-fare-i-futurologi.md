@@ -1,6 +1,5 @@
 ---
 title: 'Gli storici non dovrebbero fare i Futurologi'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 20 2026'
 heroImage: '../../assets/2026/03/homo-deus-cover.webp'
 ---

@@ -1,6 +1,5 @@
 ---
 title: 'Armi Acciaio e Malattie'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 22 2026'
 heroImage: '../../assets/2026/03/armi-acciaio-e-malattie.webp'
 ---
@@ -13,7 +12,7 @@ Però (c’è sempre un però) sarà che ne avevo sentito parlare talmente tanto
 > Armi, acciaio e malattie. Nuova edizione accresciuta: Breve storia del mondo negli ultimi tredicimila anni
 > by Jared Diamond
 
-###Una teoria che quadra
+### Una teoria che quadra
 Le teorie di Jared Diamond quadrano alla perfezione, sono talmente ben cucite da essere inececcepibili all’apparenza e il problema sta tutto qui, Jared se la canta e se la suona alla grande x conto suo, sul suo libro, e questo ci stà visto che nessuno scrive libri per smentire se stesso, però son teorie che meriterebbero approfondimenti e che vanno prese come molto credibili, molto logiche ma allo stesso tempo con beneficio d’inventario perchè incomplete e a volte superficiali visto che trascurano altre cose che avrebbero potuto influenzare l’evoluzione della civiltà umana.
 
 > L’orientamento dei continenti ha influenzato la velocità di diffusione dell’agricoltura e dell’allevamento, e forse anche della scrittura, della ruota e di altre invenzioni.

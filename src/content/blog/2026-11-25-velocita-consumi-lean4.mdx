@@ -1,0 +1,244 @@
+---
+title: 'Andare più piano fa davvero consumare meno? Un vecchio dubbio affrontato con Lean 4'
+description: 'Un viaggio tra fisica, matematica e verifica formale, partendo da una domanda delle scuole medie.'
+pubDate: 'Nov 25 2026'
+---
+
+import LineChart from '../../components/LineChart.astro';
+import { componenti, derivata, modelli, ottimo } from '../../charts/velocita-consumi';
+
+## Una domanda rimasta aperta per anni
+
+Quando frequentavo le scuole medie, un professore mi disse che andando più lentamente in automobile si consuma meno carburante.
+
+La mia obiezione era semplice: se andando più velocemente consumo più carburante ogni ora, ma impiego meno tempo per raggiungere la destinazione, non potrebbero le due cose compensarsi?
+
+A distanza di anni ho deciso di riprendere quella domanda. Non soltanto per trovare una risposta, ma anche per ripassare la matematica e imparare a utilizzare [Lean 4](https://lean-lang.org/), un linguaggio di programmazione e assistente alla dimostrazione matematica.
+
+## Il consumo orario non è il consumo totale
+
+Consideriamo un viaggio a velocità costante. Indichiamo con $d$ la distanza, con $v$ la velocità positiva e con $q(v)$ il consumo orario di carburante.
+
+Il tempo necessario per arrivare è:
+
+$$t=\frac{d}{v}$$
+
+Il consumo totale è quindi:
+
+$$C(v)=q(v)\frac{d}{v}$$
+
+La distinzione è fondamentale: consumare più litri ogni ora non significa necessariamente consumare più litri per arrivare a destinazione. Dipende da come il consumo orario varia con la velocità.
+
+In Lean 4 possiamo esprimere queste definizioni così:
+
+```lean
+import Mathlib
+
+def travelTime (d v : ℝ) : ℝ :=
+  d / v
+
+def totalConsumption (d v q : ℝ) : ℝ :=
+  q * travelTime d v
+```
+
+## Quando la mia intuizione funziona
+
+Supponiamo che il consumo orario sia direttamente proporzionale alla velocità:
+
+$$q(v)=av$$
+
+Sostituendo nella formula del consumo totale otteniamo:
+
+$$C(v)=av\frac{d}{v}=ad$$
+
+La velocità scompare. In questo modello, raddoppiare la velocità significa raddoppiare il consumo orario, ma dimezzare il tempo di viaggio. Il consumo totale rimane invariato.
+
+Possiamo formulare il risultato come un teorema Lean:
+
+```lean
+def linearRate (a v : ℝ) : ℝ := a * v
+
+def linearConsumption (d v a : ℝ) : ℝ :=
+  totalConsumption d v (linearRate a v)
+
+theorem linearConsumption_constant
+    (d v a : ℝ) (hv : v > 0) :
+    linearConsumption d v a = a * d := by
+  unfold linearConsumption totalConsumption linearRate travelTime
+  have hv_ne : v ≠ 0 := ne_of_gt hv
+  field_simp [hv_ne] <;> ring
+```
+
+La mia intuizione aveva dunque una base matematica. Ma dipendeva da un'ipotesi precisa, che non possiamo dare per scontata nel mondo reale.
+
+## La fisica complica le cose
+
+In condizioni semplificate, la resistenza aerodinamica cresce con il quadrato della velocità:
+
+$$F_{drag}=kv^2$$
+
+La potenza necessaria per contrastarla è il prodotto della forza per la velocità:
+
+$$P_{drag}=F_{drag}v=kv^3$$
+
+Se assumiamo un rendimento energetico costante, anche la componente aerodinamica del consumo orario cresce con il cubo della velocità. Su una distanza fissa, invece, cresce con il quadrato:
+
+$$C_{drag}(v)=bv^3\frac{d}{v}=bdv^2$$
+
+Raddoppiando la velocità, la potenza aerodinamica diventa otto volte maggiore, mentre il consumo attribuibile a questa componente diventa quattro volte maggiore.
+
+Il minor tempo di viaggio compensa solo parzialmente il maggior consumo orario. Ecco perché l'osservazione del professore ha una solida giustificazione fisica, soprattutto alle velocità elevate.
+
+## Un modello più completo
+
+Introduciamo tre componenti del consumo orario:
+
+- $c$: consumo di base, proporzionale al tempo trascorso;
+- $av$: componente associata alla resistenza al rotolamento;
+- $bv^3$: componente aerodinamica.
+
+Il nostro modello diventa:
+
+$$q(v)=c+av+bv^3$$
+
+E il consumo totale su una distanza fissa è:
+
+$$C(v)=d\left(\frac{c}{v}+a+bv^2\right)$$
+
+Qui emergono tre comportamenti diversi: il primo termine diminuisce all'aumentare della velocità, il secondo rimane costante e il terzo aumenta.
+
+<LineChart {...componenti} />
+
+Andare troppo lentamente può quindi essere inefficiente quanto andare troppo velocemente, anche se per ragioni differenti.
+
+Confrontando i tre modelli, solo quello combinato ha una velocità ottimale:
+
+<LineChart {...modelli} />
+
+## Esiste una velocità ottimale?
+
+Per rispondere ho ripreso un argomento che non utilizzavo da tempo: le derivate.
+
+Derivando il consumo rispetto alla velocità otteniamo:
+
+$$C'(v)=d\left(-\frac{c}{v^2}+2bv\right)$$
+
+Ponendo la derivata uguale a zero, con $d,c,b,v>0$, ricaviamo:
+
+$$2bv^3=c$$
+
+E quindi:
+
+$$\boxed{v_{ott}=\sqrt[3]{\frac{c}{2b}}}$$
+
+<LineChart {...derivata} />
+
+Nel modello, la velocità ottimale non dipende dalla distanza percorsa né dal coefficiente di rotolamento. Dipende dal consumo di base e dalla componente aerodinamica.
+
+<LineChart {...ottimo} />
+
+La derivata seconda è:
+
+$$C''(v)=d\left(\frac{2c}{v^3}+2b\right)>0$$
+
+La funzione è strettamente convessa per ogni velocità positiva: il punto stazionario è dunque l'unico minimo globale.
+
+## Dimostrare il minimo senza derivate
+
+Una delle parti più interessanti del percorso è stata trovare una dimostrazione puramente algebrica dello stesso risultato.
+
+Indichiamo con $u$ la velocità ottimale, tale che $c=2bu^3$. Sostituendo questa relazione nella differenza tra i consumi si ottiene:
+
+$$C(v)-C(u)=\frac{db(v-u)^2(v+2u)}{v}$$
+
+Per $d,b,u,v>0$, tutti i fattori sono positivi, tranne il quadrato che può anche essere zero. La differenza non può quindi essere negativa, ed è zero soltanto quando $v=u$.
+
+Questa identità permette di dimostrare direttamente sia il minimo globale sia la sua unicità.
+
+In Lean, il modello completo e il teorema del minimo possono essere espressi così:
+
+```lean
+def fullRate (c a b v : ℝ) : ℝ :=
+  c + a * v + b * v ^ 3
+
+def fullConsumption (d v c a b : ℝ) : ℝ :=
+  totalConsumption d v (fullRate c a b v)
+
+theorem fullConsumption_formula
+    (d v c a b : ℝ) (hv : v > 0) :
+    fullConsumption d v c a b =
+      d * (c / v + a + b * v ^ 2) := by
+  unfold fullConsumption totalConsumption fullRate travelTime
+  have hv_ne : v ≠ 0 := ne_of_gt hv
+  field_simp [hv_ne] <;> ring
+
+theorem consumption_difference
+    (d v u c a b : ℝ)
+    (hv : v > 0) (hu : u > 0)
+    (hopt : c = 2 * b * u ^ 3) :
+    fullConsumption d v c a b -
+      fullConsumption d u c a b =
+      d * b * (v - u)^2 * (v + 2 * u) / v := by
+  rw [fullConsumption_formula d v c a b hv]
+  rw [fullConsumption_formula d u c a b hu]
+  rw [hopt]
+  have hv_ne : v ≠ 0 := ne_of_gt hv
+  have hu_ne : u ≠ 0 := ne_of_gt hu
+  field_simp [hv_ne, hu_ne] <;> ring
+
+theorem optimalSpeed_global_minimum
+    (d v u c a b : ℝ)
+    (hd : d > 0) (hv : v > 0)
+    (hu : u > 0) (hb : b > 0)
+    (hopt : c = 2 * b * u ^ 3) :
+    fullConsumption d u c a b ≤
+      fullConsumption d v c a b := by
+  have h := consumption_difference d v u c a b hv hu hopt
+  have hnonneg :
+      0 ≤ d * b * (v - u)^2 * (v + 2 * u) / v := by
+    positivity
+  linarith
+```
+
+## Un esempio concreto
+
+Scegliamo coefficienti puramente illustrativi: $d=100$, $c=1$, $a=0{,}03$ e $b=0{,}000004$, usando chilometri, ore e litri come unità di riferimento.
+
+La velocità ottimale risultante è esattamente 50 km/h.
+
+| Velocità | Tempo di viaggio | Consumo totale |
+| ---: | ---: | ---: |
+| 25 km/h | 4 ore | 7,25 L |
+| 50 km/h | 2 ore | 6,00 L |
+| 75 km/h | 1 ora e 20 minuti | 6,58 L |
+| 100 km/h | 1 ora | 8,00 L |
+
+Passare da 25 a 50 km/h riduce il consumo. Passare da 50 a 100 km/h lo aumenta.
+
+Non esiste quindi, in questo modello, una relazione universalmente crescente o decrescente tra velocità e consumo totale.
+
+Questi numeri non sono misurazioni su un'automobile reale e non costituiscono indicazioni di guida. Il rendimento del motore, i rapporti del cambio, il traffico, le pendenze e molti altri fattori possono modificare il comportamento effettivo.
+
+## Che cosa mi ha insegnato Lean 4
+
+La parte più interessante non è stata trovare una formula, ma imparare a distinguere le ipotesi dalle conclusioni.
+
+In Lean non basta scrivere che una cosa è vera: occorre costruire una dimostrazione a partire da ipotesi esplicite. Anche una condizione apparentemente banale, come $v>0$, diventa importante quando bisogna giustificare una divisione.
+
+Il progetto è ancora in fase di validazione: i frammenti Lean riportati qui sono bozze di dimostrazioni non ancora compilate. Restano da verificare con `lake build`, controllare le dipendenze con `#print axioms` e formalizzare il collegamento con le derivate e l'esistenza della soluzione positiva.
+
+La verifica formale, inoltre, non sostituisce la validazione empirica. Lean può certificare che un risultato segue dalle ipotesi del modello, non che quelle ipotesi descrivano fedelmente un'automobile reale.
+
+## Chi aveva ragione?
+
+Il professore aveva ragione nel sottolineare l'importanza del maggior consumo alle velocità elevate. La mia obiezione, però, individuava un elemento altrettanto importante: il tempo di percorrenza.
+
+La risposta dipende da come interagiscono questi due fattori.
+
+Anni dopo, quella domanda delle scuole medie è diventata un'occasione per riprendere in mano la matematica, studiare un nuovo linguaggio e capire meglio che cosa significhi dimostrare qualcosa.
+
+Forse la lezione più utile è proprio questa: prima di chiedersi se un'affermazione sia vera o falsa, conviene chiedersi **sotto quali ipotesi è vera**.
+
+---
+
+*Argomenti: Lean 4, Mathlib, matematica, fisica, verifica formale, modellazione.*

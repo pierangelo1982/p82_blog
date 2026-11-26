@@ -1,6 +1,5 @@
 ---
 title: 'La Convinzione dell’idea originale'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 17 2026'
 heroImage: '../../assets/2026/03/convinzione-dellidea-originale.webp'
 ---

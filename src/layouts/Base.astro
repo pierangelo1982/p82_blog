@@ -1,0 +1,42 @@
+---
+import type { ComponentProps } from 'astro/types';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_LANG } from '../consts';
+
+type Props = ComponentProps<typeof BaseHead>;
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+	<head>
+		<BaseHead {...Astro.props} />
+		<slot name="head" />
+	</head>
+	<body>
+		<a class="skip-link" href="#contenuto">Vai al contenuto</a>
+		<Header />
+		<main id="contenuto">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.skip-link {
+		position: absolute;
+		left: var(--gutter);
+		top: -3rem;
+		padding: 0.5rem 0.75rem;
+		background: var(--text);
+		color: var(--bg);
+		font-family: var(--sans);
+		font-size: 0.875rem;
+		z-index: 10;
+	}
+	.skip-link:focus {
+		top: 0.75rem;
+	}
+</style>

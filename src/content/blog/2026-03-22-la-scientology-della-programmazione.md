@@ -1,6 +1,5 @@
 ---
 title: 'la scientology della programmazione'
-description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Mar 18 2026'
 heroImage: '../../assets/2026/03/la-scientology-della-programmazione.webp'
 ---

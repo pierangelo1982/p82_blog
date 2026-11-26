@@ -1,17 +1,17 @@
 ---
 interface Props {
 	date: Date;
+	format?: 'long' | 'short';
 }
 
-const { date } = Astro.props;
+const { date, format = 'long' } = Astro.props;
+
+const label = date.toLocaleDateString('it-IT', {
+	day: 'numeric',
+	month: format === 'long' ? 'long' : 'short',
+	year: format === 'long' ? 'numeric' : undefined,
+	timeZone: 'Europe/Rome',
+});
 ---
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
-</time>
+<time datetime={date.toISOString()}>{label}</time>
